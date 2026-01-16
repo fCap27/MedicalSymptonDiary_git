@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Medical Symptom Diary - Diario sintomi clienti (Admin)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link href="css.css" rel="stylesheet" />
+</head>
+
+<body data-page="admin-symptoms">
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-title">
+        <h1>Medical Symptom Diary</h1>
+        <p>Diario sintomi pazienti (Admin)</p>
+      </div>
+
+      <div class="header-right">
+        <div class="header-user-box">
+          <span id="header-user-info"></span>
+          <button id="header-logout-button" class="small-button">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="nav-links">
+      <a href="home.html" class="nav-link"><i class="fa-solid fa-house"></i> <b>Home</b></a>
+      <a href = "admin_symptoms.html" class = "nav-link active"><i class = "fa-solid fa-users-rectangle"></i><b> Diario Sintomi pazienti </b></a>
+    </nav>
+    <section class="card card-full">
+      <h2>Sintomi registrati</h2>
+      <p class="hint">Visualizzazione admin.</p>
+
+      <div id="admin-symptoms-list" class="list">
+        <p class="hint">Divisi per paziente</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Medical Symptom Diary - Admin</span>
+    <span><a href = "https://medicalsymptomdiary.eu:8000/docs"> SWAGGER </a></span>
+  </footer>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>

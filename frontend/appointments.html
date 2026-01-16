@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang = "it">
+<head>
+  <meta charset = "UTF-8" />
+  <title>Medical Symptom Diary - Prenotazione Visita</title>
+  <meta name = "viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "icon" type="PNG" href="/icons8-treatment-32.png">
+  <link rel = "preconnect" href="https://fonts.googleapis.com" />
+  <link rel = "preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href = "https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel = "stylesheet" />
+  <link
+    rel = "stylesheet"
+    href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin = "anonymous"
+    referrerpolicy = "no-referrer"
+  />
+  <link href = "css.css" rel="stylesheet" />
+
+  <!-- jsPDF via CDN (solo frontend, nessuna modifica backend/requirements) -->
+  <script src = "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+
+<body data-page = "appointments">
+  <header class = "header">
+    <div class = "header-inner">
+      <div class = "header-title">
+        <h1>Medical Symptom Diary</h1>
+        <p>Prenotazione visita</p>
+      </div>
+
+      <div class = "header-right">
+        <div class = "header-user-box">
+          <span id = "header-user-info"></span>
+          <button id = "header-logout-button" class="small-button">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class = "container">
+    <nav class = "nav-links">
+        <a href = "home.html" class="nav-link"><i class="fa-solid fa-house"></i> <b>Home</b></a>
+        <a href ="appointments.html" class="nav-link active"><i class="fa-solid fa-calendar-plus"></i> <b>Prenotazione</b></a>
+        <a href ="my_appointments.html" class="nav-link "><i class="fa-solid fa-calendar-check"></i> <b>Visite prenotate</b></a>
+    </nav>
+    <section class = "card card-full">
+      <h2>Prenota una visita</h2>
+
+      <form id = "appointment-form" class="form">
+        <label>
+          Struttura *
+          <select id = "facility" name="facility" required>
+            <option value = "">Seleziona...</option>
+            <option value = "Milano">Milano</option>
+            <option value = "Torino">Torino</option>
+            <option value = "Roma">Roma</option>
+            <option value = "Napoli">Napoli</option>
+            <option value = "Palermo">Palermo</option>
+            <option value = "Bari">Bari</option>
+          </select>
+        </label>
+
+        <label>
+          Data *
+          <input type = "date" id = "visit-date" name = "date" required />
+        </label>
+
+        <label>
+          Orario (08:00 - 17:00) *
+          <select id = "time-slot" name = "time" required>
+            <option value = "">Seleziona data/struttura...</option>
+          </select>
+        </label>
+
+        <div class = "divider"></div>
+
+        <h3>Diario sintomi (PDF)</h3>
+        <p class = "hint">
+          Clicca il bottone qui sotto per allegare il file con il tuo Diario Sintomi
+        </p>
+
+        <div class = "form-actions">
+          <button type = "button" id = "generate-pdf-btn">
+            <i class = "fa-solid fa-file-pdf"></i> Genera PDF 
+          </button> *
+
+          <a id = "download-pdf-link" class = "icon-btn hidden" href = "#" download>
+            <i class = "fa-solid fa-download"></i> Scarica PDF
+          </a>
+        </div>
+        
+        <label>
+          <input type = "text" id = "pdf-filename" readonly value = "(Dopo aver cliccato il pulsante, il file verrà visualizzato qui)" />
+        </label>
+
+        
+
+        <div class = "divider"></div>
+
+        <button type = "submit" id = "submit-appointment-btn">
+          <i class = "fa-solid fa-paper-plane"></i> Invia richiesta prenotazione
+        </button>
+
+        <p class = "hint" id = "appointment-status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class = "footer">
+    <span> Medical Symptom Diary - Prenotazione</span>
+    <span><a href = "https://medicalsymptomdiary.eu:8000/docs"> SWAGGER </a></span>
+  </footer>
+
+  <div id = "toast" class = "toast hidden"></div>
+  <script src = "app.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Medical Symptom Diary - Le mie prenotazioni</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "icon" type="PNG" href="/icons8-treatment-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link href="css.css" rel="stylesheet" />
+</head>
+
+<body data-page="my-appointments">
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-title">
+        <h1>Medical Symptom Diary</h1>
+        <p>Le mie prenotazioni</p>
+      </div>
+
+      <div class="header-right">
+        
+
+        <div class="header-user-box">
+          <span id="header-user-info"></span>
+          <button id="header-logout-button" class="small-button">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="nav-links">
+      <a href="home.html" class="nav-link"><i class="fa-solid fa-house"></i><b>Home</b> </a>
+      <a href="appointments.html" class="nav-link"><i class="fa-solid fa-calendar-plus"></i><b>Prenota</b> </a>
+      <a href="my_appointments.html" class="nav-link active"><i class="fa-solid fa-calendar-check"></i><b>Visite prenotate</b> </a>
+    </nav>
+    <section class="card card-full">
+      <h2>Storico prenotazioni</h2>
+      <div id="my-appointments-list" class="list">
+        <p class="hint">Nessuna prenotazione ancora.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Medical Symptom Diary - Prenotazioni</span>
+    <span><a href = "https://medicalsymptomdiary.eu:8000/docs"> SWAGGER </a></span>
+  </footer>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>

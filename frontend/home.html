@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang = "it">
+<head>
+  <meta charset = "UTF-8" />
+  <title>Medical Symptom Diary - Home</title>
+  <link rel = "icon" type="PNG" href = "/icons8-treatment-32.png">
+  <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+
+  <link rel = "preconnect" href = "https://fonts.googleapis.com" />
+  <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin />
+  <link href = "https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel = "stylesheet" />
+  <link
+    rel = "stylesheet"
+    href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin = "anonymous"
+    referrerpolicy = "no-referrer"
+  />
+  <link href = "css.css" rel = "stylesheet" />
+</head>
+
+<body data-page = "home">
+  <header class = "header">
+    <div class = "header-inner">
+      <div class = "header-title">
+        <h1> Medical Symptom Diary </h1>
+        <p> Seleziona un servizio </p>
+      </div>
+
+      <div class = "header-right">
+        <div class = "header-user-box">
+          <span id = "header-user-info"></span>
+          <button id = "header-logout-button" class = "small-button"> Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class = "container">
+    <section class = "card card-full" id = "card-symptoms">
+      <h2> Sintomi </h2>
+
+      <div class = "home-actions">
+         <a class = "home-tile" href="diary.html" id = "tile-new-symptom">
+          <i class = "fa-solid fa-notes-medical"></i>
+          <div>
+            <div class = "home-title"> Nuovo Sintomo</div>
+            <div class = "hint"> Aggiungi un nuovo sintomo al tuo diario</div>
+          </div>
+        </a>
+        <a class = "home-tile" href="snapshots.html" id = "tile-my-diary">
+          <i class = "fa-solid fa-chart-line"></i>
+          <div>
+            <div class = "home-title"> Diario sintomi</div>
+            <div class = "hint"> Visualizza, modifica o elimina i tuoi sintomi registrati</div>
+          </div>
+        </a>
+        <a class = "home-tile hidden" href = "admin_symptoms.html" id = "tile-admin-symptoms">
+          <i class = "fa-solid fa-users-rectangle"></i>
+          <div>
+            <div class = "home-title">Diario sintomi pazienti</div>
+            <div class = "hint">Visualizza sintomi raggruppati per paziente</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+    <section class = "card card-full" id = "card-visits">
+      <h2> Visite </h2>
+      <div class = "home-actions">
+        <a class = "home-tile" href = "appointments.html" id = "tile-book-visit">
+          <i class = "fa-solid fa-calendar-plus"></i>
+          <div>
+            <div class = "home-title">Prenotazione visita</div>
+            <div class = "hint"> Richiedi un appuntamento presso una delle nostre strutture</div>
+          </div>
+        </a>
+      </div>
+      <div class = "home-actions">
+        <a class = "home-tile" href = "my_appointments.html" id = "tile-my-visits">
+          <i class = "fa-solid fa-calendar-check"></i>
+          <div>
+            <div class = "home-title">Visite prenotate</div>
+            <div class = "hint"> Visualizza i tuoi appuntamenti</div>
+          </div>
+        </a>
+        <a class = "home-tile hidden" href = "admin_appointments.html" id = "tile-admin-appointments">
+          <i class = "fa-solid fa-clipboard-list"></i>
+          <div>
+            <div class = "home-title">Visite prenotate</div>
+            <div class = "hint">Gestisci prenotazioni e stati</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    
+
+    <div id="help-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <button id="close-help-modal" class="modal-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2>Guida all’utilizzo della piattaforma</h2>
+
+        <ul class="help-list">
+          <li><strong>Nuovo sintomo:</strong> inserisci un sintomo indicando data, descrizione e scala di dolore.</li>
+          <li><strong>Diario sintomi:</strong> consulta, modifica o elimina i sintomi registrati.</li>
+          <li><strong>Prenotazione visita:</strong> seleziona struttura, data e orario disponibili.</li>
+          <li><strong>Visite prenotate:</strong> visualizza i tuoi appuntamenti</li>
+        </ul>
+      </div>
+    </div>
+    <div id="help-modal-admin" class="modal hidden">
+      <div class="modal-overlay-admin"></div>
+      <div class="modal-content">
+        <button id="close-help-modal-admin" class="modal-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2>Guida all’utilizzo ADMIN</h2>
+
+        <ul class="help-list">
+          <li><strong>Sintomi:</strong> Solo visualizzazione dei sintomi raggruppati per cliente</li>
+          <li><strong>Visite:</strong> Gestisci lo stato delle prenotazione richieste: Accetta, Rifiuta o proponi una nuova data/ora</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class = "footer">
+    <span>Medical Symptom Diary - Home</span>
+    <span><a href = "https://medicalsymptomdiary.eu:8000/docs"> SWAGGER </a></span>
+    <button id="help-button" class="help-button" title="Guida all'utilizzo">
+      <i class="fa-solid fa-circle-question"></i>
+    </button>
+    <button id="help-button-admin" class="help-button hidden" title="Guida all'utilizzo admin">
+      <i class="fa-solid fa-circle-question"></i>
+    </button>
+  </footer>
+
+  <div id = "toast" class = "toast hidden"></div>
+  <script src = "app.js"></script>
+</body>
+</html>

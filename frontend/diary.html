@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang = "it">
+
+  <head>
+    <meta charset = "UTF-8" />
+    <title> Medical Symptom Diary - Diario Sintomi </title>
+    <link rel="icon" type="PNG" href="/icons8-treatment-32.png">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <link rel = "preconnect" href = "https://fonts.googleapis.com" />
+    <link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin />
+    <link href = "https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel = "stylesheet" />
+
+    <!-- free license, awesome font -->
+    <link
+      rel = "stylesheet"
+      href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity = "sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin = "anonymous"
+      referrerpolicy = "no-referrer"
+    />
+
+    <link href = "css.css" rel = "stylesheet" />
+  </head>
+
+
+  <body data-page = "diary">
+    <header class = "header">
+      <div class = "header-inner">
+        <div class = "header-title">
+          <h1> Medical Symptom Diary</h1>
+          <p> Registra i tuoi sintomi giorno per giorno</p>
+        </div>
+        <div class = "header-right">
+          <div class = "header-user-box">
+            <span id = "header-user-info"></span>
+            <button id = "header-logout-button" class = "small-button">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class = "container">
+      <nav class = "nav-links">
+          <a href = "home.html" class = "nav-link"><i class = "fa-solid fa-house"></i><b> Home </b></a>  
+          <a href = "diary.html" class = "nav-link active"><i class = "fa-solid fa-notes-medical"></i><b> Nuovo Sintomo </b></a>
+          <a href = "snapshots.html" class = "nav-link "><i class = "fa-solid fa-chart-line"></i><b> Diario Sintomi </b></a>
+
+      </nav>
+      <section class = "card card-full">
+        <h2> Nuovo sintomo</h2>
+        <form id = "symptom-form" class = "form">
+          <input type="hidden" id="editing-entry-id" value="" />
+          <label>
+            Titolo *
+            <input type = "text" name = "title" required placeholder = "Es. Mal di testa, febbre..." />
+          </label>
+          <label>
+            Descrizione 
+            <textarea name = "description" rows = "3" placeholder = "Descrivi il sintomo"></textarea>
+          </label>
+          <label>
+            Scala di dolore (1-10) *
+            <input type = "number" name = "severity" min = "1" max = "10" value = "5" required />
+          </label>
+          <label>
+            Data e ora *
+            <input type = "datetime-local" name = "timestamp" id="timestamp" required />
+          </label>
+          <label>
+            Note
+            <input type = "text" name = "tags" placeholder = "es. cefalea, sera" />
+          </label>
+          <div class="form-actions">
+            <button type="submit" id="submit-symptom-btn">Salva Sintomo</button>
+            <button type="button" id="cancel-edit-btn" class="icon-btn danger hidden">
+              <i class="fa-solid fa-xmark"></i> Annulla
+            </button>
+          </div>
+
+
+        </form>
+      </section>
+
+    </main>
+
+    <footer class = "footer">
+      <span> Medical Symptom Diary - Nuovo Sintomo </span>
+      <span><a href = "https://medicalsymptomdiary.eu:8000/docs"> SWAGGER </a></span>
+    </footer>
+
+    <div id = "toast" class = "toast hidden"></div>
+
+    <script src = "app.js"></script>
+  </body>
+</html>
