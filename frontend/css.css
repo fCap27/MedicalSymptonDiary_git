@@ -158,11 +158,6 @@ body {
   gap: 1.3rem;
 }
 
-/* Layout specifico per la pagina di login */
-/*body[data-page="auth"] .container {
-  max-width: 600px;
-  grid-template-columns: 2fr;
-}*/
 
 
 /* CLASSI PER BOX */
@@ -187,12 +182,6 @@ body {
   pointer-events: none;
 }
 
-/*
-.card > * {
-  position: relative;
-  z-index: 1;
-}
-*/
 
 .card h2,
 .card h3 {
@@ -594,7 +583,7 @@ button:active {
   margin-top: 0;
 }
 
-.icon-btn::before { content: ""; } /* evita l'icona automatica del button globale */
+.icon-btn::before { content: ""; } 
 .icon-btn:hover { background: rgba(15, 23, 42, 0.06); }
 
 .icon-btn.danger {

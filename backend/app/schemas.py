@@ -58,22 +58,7 @@ class SymptomEntryOut(SymptomEntryBase):
         orm_mode = True
 
 
-# Snapshot Rapporto
-
-class SnapshotCreate(BaseModel):
-    pass
-
-
-class SnapshotOut(BaseModel):
-    id: int
-    summary_text: str
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-# Appuntamenti
+# Appuntamenti || appuntamenti admin
 
 class AppointmentCreate(BaseModel):
     facility: str
@@ -113,6 +98,12 @@ class AppointmentAdminOut(BaseModel):
     class Config:
         orm_mode = True
 
+class AppointmentProposeUpdate(BaseModel):
+    proposed_date: date
+    proposed_time: time 
+
+# sintomi admin
+
 class EntryAdminOut(BaseModel):
     id: int
     title: str
@@ -127,6 +118,4 @@ class EntryAdminOut(BaseModel):
     class Config:
         orm_mode = True
 
-class AppointmentProposeUpdate(BaseModel):
-    proposed_date: date
-    proposed_time: time
+

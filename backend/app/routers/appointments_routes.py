@@ -19,7 +19,7 @@ WORKING_HOURS = [
     dt_time(16, 0), dt_time(17, 0),
 ]
 
-# Disponibilità orari
+# Disponibilità orari struttura
 @router.get("/availability")
 def Disponibilità_appuntamenti(
     facility: str = Query(...),
@@ -36,7 +36,7 @@ def Disponibilità_appuntamenti(
 
 
 
-# prenota visita
+# Utente, prenota visita
 @router.post("", response_model=schemas.AppointmentOut)
 def Prenota_visita(
     data: schemas.AppointmentCreate,
@@ -71,7 +71,7 @@ def Prenota_visita(
     db.refresh(appointment)
     return appointment
 
-# mie visite
+# Utente, mie visite
 @router.get("", response_model=List[schemas.AppointmentOut])
 def Miei_appuntamenti(
     db: Session = Depends(get_db),
@@ -82,7 +82,8 @@ def Miei_appuntamenti(
     ).order_by(models.Appointment.date.desc(), models.Appointment.time.desc()).all()
     return items
 
-# admin cambio stato 
+# admin cambio stato || accetta o rifiuta 
+
 @router.put("/{appointment_id}/status", response_model=schemas.AppointmentOut)
 def update_appointment_status(
     appointment_id: int,
@@ -90,7 +91,6 @@ def update_appointment_status(
     db: Session = Depends(get_db),
     admin=Depends(require_admin),
 ):
-    # Per ora: endpoint "admin-like" senza controllo admin (lo aggiungiamo dopo)
     appt = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
     if not appt:
         raise HTTPException(status_code=404, detail="Prenotazione non trovata")
@@ -103,6 +103,8 @@ def update_appointment_status(
     db.commit()
     db.refresh(appt)
     return appt
+
+# admin visualizza tutti gli appuntamenti
 
 @router.get("/admin/all", response_model=List[schemas.AppointmentAdminOut])
 def admin_list_all_appointments(
@@ -130,6 +132,8 @@ def admin_list_all_appointments(
         for appt, email in items
     ]
 
+# Admin propone nuove tempistiche || pulsante di proposta
+
 @router.put("/{appointment_id}/propose", response_model=schemas.AppointmentOut)
 def propose_new_slot(
     appointment_id: int,
@@ -149,6 +153,8 @@ def propose_new_slot(
     db.commit()
     db.refresh(appt)
     return appt
+
+# visite utente con status = proposed || Accetta
 
 @router.put("/{appointment_id}/accept", response_model=schemas.AppointmentOut)
 def accept_proposal(
@@ -177,6 +183,8 @@ def accept_proposal(
     db.refresh(appt)
     return appt
 
+# visite utente con status = proposed || Rifiuta
+
 @router.put("/{appointment_id}/reject", response_model=schemas.AppointmentOut)
 def reject_proposal(
     appointment_id: int,
@@ -204,6 +212,8 @@ def reject_proposal(
 
     import base64
 from fastapi.responses import Response
+
+# creazione pdf per visite, visuale admin
 
 @router.get("/{appointment_id}/pdf")
 def admin_download_diary_pdf(

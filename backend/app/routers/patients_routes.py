@@ -7,6 +7,7 @@ from ..auth import get_current_user
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
+# leggo utente registrato
 
 @router.get("/me", response_model=schemas.UserOut)
 def Il_mio_account(

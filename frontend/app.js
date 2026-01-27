@@ -8,7 +8,7 @@ const STORAGE_USER_KEY = "msd_user";
 
 let authToken = null;
 
-// UTIL: STORAGE & AUTH
+// Storage AUTH
 
 function saveAuth(token, user) {
   authToken = token;
@@ -89,7 +89,7 @@ function hideToast() {
   toast.classList.remove("show");
 }
 
-// API 
+// API utente loggato
 
 async function fetchCurrentUser() {
   if (!authToken) return null;
@@ -111,7 +111,7 @@ async function fetchCurrentUser() {
   }
 }
 
-// SETUP AUTH (index.html) 
+// index.html || login o reg 
 
 function setupAuthPage() {
   console.log("Init pagina: AUTH");
@@ -167,6 +167,8 @@ function setupAuthPage() {
     return;
   }
 
+ // invio reg
+
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(registerForm);
@@ -201,6 +203,8 @@ function setupAuthPage() {
       showToast("Errore di rete in registrazione.", { type: "error" });
     }
   });
+
+// invio login
 
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -255,7 +259,7 @@ function setupAuthPage() {
   });
 }
 
-//home.html
+//home.html || menu
 
 async function setupHomePage() {
   loadAuthFromStorage();
@@ -285,8 +289,9 @@ async function setupHomePage() {
   const show = (el) => el && el.classList.remove("hidden");
   const hide = (el) => el && el.classList.add("hidden");
 
+  // visuale admin
+
   if (isAdmin) {
-    // visuale admin
     hide(tileNewSymptom);
     hide(tileMyDiary);
     hide(tileBookVisit);
@@ -328,7 +333,7 @@ async function setupHomePage() {
   }
 }
 
-//admin_appointments.html
+//admin_appointments.html || Gestione appuntamenti amministratore
 async function setupAdminAppointmentsPage() {
   loadAuthFromStorage();
   if (!authToken) {
@@ -361,6 +366,8 @@ async function setupAdminAppointmentsPage() {
     return { label: "Da confermare", cls: "pending" };
   };
 
+// gestisco formattazione data, weekend non selezionabili, prima data utile dopo 7 giorni dalla richiesta
+
   const pad = (n) => String(n).padStart(2, "0");
   const toDateStr = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
@@ -383,6 +390,7 @@ async function setupAdminAppointmentsPage() {
     return nextBusinessDay(addDays(new Date(), 7));
   }
 
+  // richiamo maschera appuntamenti, schermata admin
 
   async function loadAppointments() {
     listEl.innerHTML = `<p class="hint">Caricamento...</p>`;
@@ -469,11 +477,13 @@ async function setupAdminAppointmentsPage() {
       listEl.appendChild(div);
     });
 
+    // gestione data-action dei pulsanti per gestione stato visita
+
     listEl.querySelectorAll("button[data-action]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
       const action = btn.dataset.action;
-      
+      // chiedo pdf al backend (appointments_routes per creazione)
       if (action === "open-pdf") {
         try {
           const resPdf = await fetch(`${API_BASE_URL}/api/appointments/${id}/pdf`, {
@@ -496,9 +506,6 @@ async function setupAdminAppointmentsPage() {
           document.body.removeChild(a);
 
           URL.revokeObjectURL(url);
-
-
-          // opzionale: rilascia dopo un po'
           setTimeout(() => URL.revokeObjectURL(url), 60_000);
         } catch (e) {
           console.error(e);
@@ -508,7 +515,7 @@ async function setupAdminAppointmentsPage() {
       }
 
 
-      // 1) Conferma / Rifiuta
+      // Conferma / Rifiuta visita
       if (action === "confirm" || action === "reject") {
         const status = action === "confirm" ? "CONFIRMED" : "REJECTED";
 
@@ -531,7 +538,7 @@ async function setupAdminAppointmentsPage() {
         return;
       }
 
-      // 2) Apri form proposta
+      // Proposta nuove tempistiche
       if (action === "propose") {
         const box = document.getElementById(`propose-box-${id}`);
         const dateEl = document.getElementById(`propose-date-${id}`);
@@ -540,12 +547,12 @@ async function setupAdminAppointmentsPage() {
 
         if (!box || !dateEl || !timeEl) return;
 
-        // Mostra box
+        // Mostra box data e ora
         box.classList.remove("hidden");
         const actionsBar = document.getElementById(`admin-actions-${id}`);
         if (actionsBar) actionsBar.classList.add("hidden");
 
-        // vincoli data (+7, no weekend)
+        // richiamo stessi vincoli sulla data
         const minObj = getMinBookableDate();
         const minStr = toDateStr(minObj);
 
@@ -554,16 +561,11 @@ async function setupAdminAppointmentsPage() {
 
         hintEl.textContent = "Seleziona una data e carica gli slot disponibili...";
 
-        // Funzione per caricare slot disponibili dalla API availability
+        // richiamo slot disponibili
         async function loadSlotsFor(dateStr) {
           timeEl.innerHTML = `<option value="">Caricamento...</option>`;
-
-          // Prendo stessa struttura
         }
-
-        // Per evitare qualsiasi ambiguità, carichiamo slots usando facility dal dataset del bottone propose:
-        // quindi dobbiamo aggiungere data-facility al bottone propose. Lo facciamo nel punto 2B.2 con 1 modifica.
-        // (vedi sotto: "Piccola correzione data-facility")
+        // prendo la struttura di riferimento
         const facility = btn.getAttribute("data-facility");
 
         async function refreshAvailabilityFor(dateStr) {
@@ -627,7 +629,7 @@ async function setupAdminAppointmentsPage() {
         return;
       }
 
-        // 3) Annulla form proposta
+        // 3) Esci form proposta
         if (action === "cancel-proposal") {
           const box = document.getElementById(`propose-box-${id}`);
           if (box) box.classList.add("hidden");
@@ -681,7 +683,7 @@ async function setupAdminAppointmentsPage() {
   await loadAppointments();
 }
 
-//admin_symptoms.html
+//admin_symptoms.html || Sintomi di tutti gli utenti, visuale admin
 async function setupAdminSymptomsPage() {
   loadAuthFromStorage();
   if (!authToken) {
@@ -766,7 +768,7 @@ async function setupAdminSymptomsPage() {
 
 
 
-// HEADER (diary/snapshots)
+// utente loggato
 
 function setupHeaderUserArea() {
   const headerUserInfo =  document.getElementById("header-user-info");
@@ -791,7 +793,7 @@ function setupHeaderUserArea() {
   });
 }
 
-// Nuovo Sintomo (diary.html)
+// diary.html || Inserisci nuovo sintomo
 
 async function setupDiaryPage() {
   console.log("Init pagina: DIARY");
@@ -806,6 +808,8 @@ async function setupDiaryPage() {
   await fetchCurrentUser();
   setupHeaderUserArea();
 
+  // prendo dati dal form
+
   const entriesList = document.getElementById("entries-list");
   const symptomForm = document.getElementById("symptom-form");
   const hasEntriesList = Boolean(entriesList);
@@ -814,6 +818,8 @@ async function setupDiaryPage() {
     console.warn("Elemento symptom-form non trovato");
     return;
   }
+
+  // variabili per form di modifica (snapshot.html)
 
   let editingEntryId = null;
   const editingInput = document.getElementById("editing-entry-id");
@@ -824,8 +830,7 @@ async function setupDiaryPage() {
   function exitEditMode() {
     symptomForm.reset();
     symptomForm.severity.value = 5;
-    // esce dalla modalità modifica + aggiorna UI (bottone e hidden input)
-    // se non vuoi richiamare setEditingId, lascia com'è, ma questa è più pulita:
+    // esce dalla modalità modifica + aggiorna bottone e hidden input
     editingEntryId = null;
     if (editingInput) editingInput.value = "";
     if (submitButton) submitButton.textContent = "Salva sintomo";
@@ -844,11 +849,11 @@ async function setupDiaryPage() {
 
 
 
-  // Proponi oggi e blocco date future
+  // data su oggi di default e blocco date future, evitando previsione dei sintomi
   const tsInput = document.getElementById("timestamp");
   if (tsInput) {
     const now = new Date();
-    // datetime-local vuole formato "YYYY-MM-DDTHH:MM"
+    // datetime-local formato "YYYY-MM-DDTHH:MM"
     
     const pad = (n) => String(n).padStart(2, "0");
     const localValue = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
@@ -856,17 +861,16 @@ async function setupDiaryPage() {
     tsInput.max = localValue; // impedisce date future dal selettore
   } 
 
-
   if (!symptomForm) {
     console.warn("Elemento symptom-form non trovato");
     return;
   }
 
-  // entriesList facolt in diary.html
   if (!entriesList) {
     console.warn("entries-list non trovato");
   }
 
+  //Pulsante inserimento sintomo
 
   symptomForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -898,6 +902,7 @@ async function setupDiaryPage() {
       return;
     }
 
+    // dati form popolati per api
     const payload = {
       title,
       description,
@@ -980,6 +985,8 @@ async function setupDiaryPage() {
 
 }
 
+// snapshot.html || Elenco miei sintomi
+
 async function loadEntries(entriesList, symptomForm, getEditingId, setEditingId) {
   if (!entriesList) return;
 
@@ -1011,6 +1018,8 @@ async function loadEntries(entriesList, symptomForm, getEditingId, setEditingId)
 
       const dt = new Date(entry.timestamp);
       const dateStr = dt.toLocaleString("it-IT");
+
+      // inserisco bottoni di modifica e eliminazione nell'elenco
 
       div.innerHTML = `
         <strong>${entry.title}</strong> (${entry.severity}/10) - ${dateStr}<br/>
@@ -1091,7 +1100,7 @@ async function loadEntries(entriesList, symptomForm, getEditingId, setEditingId)
   }
 }
 
-// appuntamenti (appointments.html)
+// appointments.html || prenotazione appuntamenti
 
 async function setupAppointmentsPage() {
   loadAuthFromStorage();
@@ -1115,7 +1124,7 @@ async function setupAppointmentsPage() {
 
   if (!form || !facilitySel || !dateInput || !timeSel) return;
 
-  // Data: prenotabile a 7 giorni no sabato/domenica
+  // Data: prenotabile a 7 giorni no weekend
   const pad = (n) => String(n).padStart(2, "0");
   const toDateStr = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const todayStr = toDateStr(new Date());
@@ -1149,13 +1158,13 @@ async function setupAppointmentsPage() {
   dateInput.min = minDateStr;
   dateInput.value = minDateStr;
 
-  // Slot fissi 08:00 - 17:00 (10 slot)
+  // Slot fissi 08:00 - 17:00 (Supposizione orari lavorativi strutture)
   const ALL_SLOTS = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
 
   // PDF in memoria
   let pdfBlobUrl = null;
   let pdfFileName = null;
-  let pdfBase64 = null; // da inviare al backend (senza download)
+  let pdfBase64 = null; 
 
   function setSlots(bookedSet) {
     timeSel.innerHTML = `<option value="">Seleziona...</option>`;
@@ -1167,6 +1176,8 @@ async function setupAppointmentsPage() {
       timeSel.appendChild(opt);
     });
   }
+
+// controllo disponibilita fascia orarie
 
   async function refreshAvailability() {
   const facility = facilitySel.value;
@@ -1197,6 +1208,7 @@ async function setupAppointmentsPage() {
   }
 }
 
+// al cambio struttura selezionata, richiedo disponibilita
 
   facilitySel.addEventListener("change", refreshAvailability);
   dateInput.addEventListener("change", () => {
@@ -1205,7 +1217,7 @@ async function setupAppointmentsPage() {
 
     let chosen = new Date(dateInput.value + "T12:00:00");
 
-    // Se prima della data minima forza la minima
+    // Se prima della data minima forza la minima, blocco date passate 
     if (toDateStr(chosen) < minStr) {
       dateInput.value = minStr;
       showToast("Puoi prenotare solo a partire da 7 giorni da oggi (escluso weekend).", { type: "error" });
@@ -1217,7 +1229,6 @@ async function setupAppointmentsPage() {
     if (isWeekend(chosen)) {
       chosen = nextBusinessDay(chosen);
 
-      // protezione extra: se per qualche motivo finisce prima del minimo
       if (toDateStr(chosen) < minStr) chosen = minObj;
 
       dateInput.value = toDateStr(chosen);
@@ -1229,16 +1240,16 @@ async function setupAppointmentsPage() {
 
   await refreshAvailability();
 
-  // Genera nome file: NomeUtente_DiarioSintomi_DataOdierna.pdf
+  // Generazione pdf lato client, imposto nome
   function buildPdfFileName() {
     const safeName = (currentUser?.name || "Utente").replace(/\s+/g, "_");
     return `${safeName}_DiarioSintomi_${todayStr}.pdf`;
   }
 
-  // Generazione PDF: SOLO in memoria. Scarica solo se clicchi sul link.
+  // Generazione PDF
   generatePdfBtn.addEventListener("click", async () => {
     try {
-      // Prende i sintomi dal backend
+      // richiamo i sintomi dell'utente dal backend
       const res = await fetch(`${API_BASE_URL}/api/entries`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
@@ -1263,7 +1274,7 @@ async function setupAppointmentsPage() {
       }
 
 
-      // Usa jsPDF (CDN)
+      // Usa jsPDF 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
@@ -1286,7 +1297,6 @@ async function setupAppointmentsPage() {
           const line2 = `Descrizione: ${e.description || "-"}`;
           const line3 = `Note: ${e.tags || "-"}`;
 
-          // gestione “a mano” del salto pagina
           if (y > 270) { doc.addPage(); y = 20; }
 
           doc.text(line1, 14, y); y += 6;
@@ -1295,12 +1305,12 @@ async function setupAppointmentsPage() {
         });
       }
 
-      // 1) Blob URL per download (solo su click)
+      // 1) blob URL per download (solo su click)
       if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
       const blob = doc.output("blob");
       pdfBlobUrl = URL.createObjectURL(blob);
 
-      // 2) Base64 per allegare alla prenotazione (senza scaricare)
+      // 2) base64 per allegare alla prenotazione 
       const arrayBuffer = await blob.arrayBuffer();
       const bytes = new Uint8Array(arrayBuffer);
       let binary = "";
@@ -1321,7 +1331,7 @@ async function setupAppointmentsPage() {
     }
   });
 
-  // Submit prenotazione (nel prossimo step lo colleghiamo al backend POST /api/appointments)
+  // Invio prenotazione
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -1334,7 +1344,7 @@ async function setupAppointmentsPage() {
       return;
     }
 
-    // Richiedi esplicitamente il PDF prima di inviare (così è coerente)
+    // pdf obbligatorio
     if (!pdfBase64 || !pdfFileName) {
       showToast("Genera prima il PDF del diario sintomi.", { type: "error" });
       return;
@@ -1344,7 +1354,7 @@ async function setupAppointmentsPage() {
       const payload = {
         facility,
         date,          // "YYYY-MM-DD"
-        time,          // "HH:MM" (Pydantic lo accetta)
+        time,          // "HH:MM" 
         pdf_filename: pdfFileName,
         pdf_base64: pdfBase64
       };
@@ -1390,7 +1400,7 @@ async function setupAppointmentsPage() {
       });
     }
 
-// mie visite (myAppointments.html)
+// appointments.html || Elenco Appuntamenti prenotati utente
 
 async function setupMyAppointmentsPage() {
   loadAuthFromStorage();
@@ -1435,6 +1445,7 @@ async function setupMyAppointmentsPage() {
       const timeStr = String(a.time).slice(0, 5);
       const when = `${formatDateIT(a.date)} ${timeStr}`;
 
+      // visualizzo stato nell'elenco
 
       const rawStatus = (a.status || "PENDING").toUpperCase();
 
@@ -1449,7 +1460,7 @@ async function setupMyAppointmentsPage() {
         cls = "rejected";
       } else if (rawStatus === "PROPOSED") {
         label = "Proposta ricevuta";
-        cls = "pending"; // gialla
+        cls = "pending"; 
       }
 
       const proposedBlock = (rawStatus === "PROPOSED" && a.proposed_date && a.proposed_time)
@@ -1484,6 +1495,8 @@ async function setupMyAppointmentsPage() {
 
       listEl.appendChild(div);
     });
+
+    // Gestione accetta e conferma nuova proposta dell'admin (status==proposed all'avvio)
 
     listEl.querySelectorAll("button[data-action]").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -1526,6 +1539,7 @@ async function setupMyAppointmentsPage() {
   }
 }
 
+// bottone help nella pagina home.html, guida sull'applicazione
 
 const helpBtn = document.getElementById("help-button");
 const helpModal = document.getElementById("help-modal");

@@ -8,6 +8,7 @@ from ..auth import get_password_hash, authenticate_user, create_access_token
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+# reg
 
 @router.post("/register", response_model=schemas.UserOut)
 def registra_utente(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -28,6 +29,7 @@ def registra_utente(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
     return user
 
+# login
 
 @router.post("/login", response_model=schemas.Token)
 def login(

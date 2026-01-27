@@ -11,6 +11,7 @@ from app.admin_deps import require_admin
 
 router = APIRouter(prefix="/api/entries", tags=["entries"])
 
+# utente, inserisce sintomo
 
 @router.post("", response_model=schemas.SymptomEntryOut)
 def Inserisci_Sintomo(
@@ -31,6 +32,7 @@ def Inserisci_Sintomo(
     db.refresh(entry)
     return entry
 
+# Utente, visualizza i suoi sinotmi
 
 @router.get("", response_model=List[schemas.SymptomEntryOut])
 def I_Miei_Sintomi(
@@ -53,6 +55,7 @@ def I_Miei_Sintomi(
     entries = q.order_by(models.SymptomEntry.timestamp.desc()).all()
     return entries
 
+# Utente, modifica sintomo
 
 @router.put("/{entry_id}", response_model=schemas.SymptomEntryOut)
 def Aggiorna_Sintomo(
@@ -84,6 +87,7 @@ def Aggiorna_Sintomo(
     db.refresh(entry)
     return entry
 
+# utente, elimina sintomo
 
 @router.delete("/{entry_id}")
 def Elimina_sintomo(
@@ -102,6 +106,8 @@ def Elimina_sintomo(
     db.delete(entry)
     db.commit()
     return {"status": "deleted"}
+
+# admin, visualizza tutti i sintomi registrati
 
 @router.get("/admin/all", response_model=List[schemas.EntryAdminOut])
 def admin_list_all_entries(

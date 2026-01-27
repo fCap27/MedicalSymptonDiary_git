@@ -12,6 +12,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# sessione db per api
 
 def get_db():
     """Restituisce una sessione DB da usare nelle API."""

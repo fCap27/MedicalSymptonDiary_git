@@ -21,7 +21,7 @@ pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 # Swagger
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
-
+# hash password
 def get_password_hash(password: str) -> str:
     """Restituisce l'hash della password."""
     if password is None:
@@ -32,21 +32,22 @@ def get_password_hash(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+# creazione token
 
 def create_access_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
-    """
-    subject = stringa che identifica l'utente (in questo caso: email).
-    """
+    """ subject = stringa che identifica l'utente (in questo caso: email). """
     to_encode = {"sub": subject}
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+# prendo email da user
 
 def get_user_by_email(db: Session, email: str) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.email == email).first()
 
+# login
 
 def authenticate_user(db: Session, email: str, password: str) -> Optional[models.User]:
     user = get_user_by_email(db, email)
@@ -56,6 +57,7 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[models
         return None
     return user
 
+# leggo utente loggato
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),

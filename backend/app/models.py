@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
 
+# classe utenti
 
 class User(Base):
     __tablename__ = "users"
@@ -18,6 +19,7 @@ class User(Base):
     entries = relationship("SymptomEntry", back_populates="user", cascade="all, delete")
     snapshots = relationship("Snapshot", back_populates="user", cascade="all, delete")
 
+# classe sintomi
 
 class SymptomEntry(Base):
     __tablename__ = "symptom_entries"
@@ -34,17 +36,7 @@ class SymptomEntry(Base):
     user = relationship("User", back_populates="entries")
 
 
-class Snapshot(Base):
-    __tablename__ = "snapshots"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
-    summary_text = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    user = relationship("User", back_populates="snapshots")
-
+# classe appuntamenti
 
 class Appointment(Base):
     __tablename__ = "appointments"
